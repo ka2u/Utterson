@@ -1,0 +1,46 @@
+% my @links = @_;
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="css/screen.css" type="text/css" media="screen, projection">
+    <link rel="stylesheet" href="css/print.css" type="text/css" media="print">
+    <link rel="stylesheet" href="css/style.css" type="text/css" media="screen, projection">
+    <style>
+      h1 { margin: 20px; }
+      p.tagline { color: #888; padding-bottom: 2em }
+      p.quote  { padding-bottom: 0 }
+      p.quoted { text-align: right; padding: 0; font-style: italic; padding-bottom: 1em }
+      pre.code { color:#fff; background-color:#111; width: 600px }
+      ul { font-size: 20px }
+      #footer { text-align: center }
+      #main { margin-left: 15px }
+    </style>
+</head>
+  <body>
+    <div id="wrap">
+      <div id="header" class="span-24 last">
+        <h1>Nico</h1>
+        <hr />
+      </div>
+      <div id="main" class="container clearfix">
+        <div class="span-15">
+          <ul>
+% for (sort @links) {
+          <li>
+          <a href="<%= "$_.html" %>"><%= $_ %></a><br />
+          </li>
+% }
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div id="footer" class="container">
+      <hr />
+      created by ka2u
+    </div>
+  </body>
+</html>
+

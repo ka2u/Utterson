@@ -1,0 +1,48 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+use FindBin;
+use lib "$FindBin::Bin/../../extlib/lib/perl5";
+use lib "$FindBin::Bin/../lib";
+use Hyde;
+use Getopt::Long;
+use Plack::Builder;
+use FindBin;
+use File::Spec::Functions;
+
+
+my ($generate, $source, $plackup, $layouts);
+Getopt::Long::Configure( "no_ignore_case", "pass_through" );
+Getopt::Long::GetOptions(
+    'g|generate'  => \$generate,
+    's|server'    => \$plackup,
+);
+
+if ($generate) {
+    Hyde::generate();
+}
+elsif ($plackup) {
+    plackup();
+}
+else {
+    print "needs option generate or plackup\n";
+}
+
+sub plackup {
+    my $contents_dir = catdir($FindBin::Bin, '..', 'site');
+
+    require Plack::App::Directory;
+    my $handler =
+      Plack::App::Directory->new( { root => $contents_dir } )->to_app;
+
+    my %options;
+    require Plack::Loader;
+    $options{port} ||= 4423;
+    $options{host} ||= '0.0.0.0';
+    print "server start port: " . $options{port} . "\n";
+    Plack::Loader->auto(%options)->run($handler);
+
+}
+
+__END__
