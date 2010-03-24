@@ -4,12 +4,23 @@ use strict;
 use warnings;
 our $VERSION = '0.01';
 
+use base 'Mojo::Base';
+use Mojo::Loader;
+use Mojo::ByteStream;
 use File::Spec::Functions;
 use Mojo::Template;
-use Text::Xatena;
 use Encode;
 
+__PACKAGE__->attr(plugins => sub{{}});
+
+sub new {
+    my $self = shift->SUPER::new(@_);
+    $self->plugin('hatena');
+    return $self;
+}
+
 sub generate {
+    my $self = shift;
     my $layouts_dir = catdir($FindBin::Bin, '..', 'layouts');
     my $layouts = catdir($layouts_dir, 'default');
 
@@ -19,25 +30,50 @@ sub generate {
 
     my $output_dir = catdir($FindBin::Bin, '..', 'site');
 
-    my $xatena = Text::Xatena->new;
-    my $mt = Mojo::Template->new;
 
-    my $menu = catdir($layouts_dir, 'menu');
-    $mt->render_file_to_file($menu, catdir($output_dir, "menu.html"), @sources);
+    my @files;
     foreach my $source (@sources) {
         print "[source]$source\n";
+        my ($file, $date, $ft) = split /\./, $source;
+        push @files, $file;
+        warn "$file, $date, $ft";
         open my $fh, '<', catdir($source_dir, $source);
         my $string = join "", <$fh>;
-        my $formated = $xatena->format($string);
-        print "[output]".catdir($output_dir, "$source.html")."\n";
-        $mt->render_file_to_file(
-            $layouts,
-            catdir($output_dir, "$source.html"),
-            Encode::decode('utf-8', $formated));
+        print "[output]".catdir($output_dir, "${file}.html")."\n";
+        my $args = {
+            layouts => $layouts,
+            output => catdir($output_dir, "${file}.html"),
+            string => $string,
+        };
+        unless (exists $self->plugins->{$ft}) {
+            print "$ft doesn't exist.";
+            next;
+        }
+        $self->plugins->{$ft}->($self, $args);
     }
+
+    my $mt = Mojo::Template->new;
+    my $menu = catdir($layouts_dir, 'menu');
+    $mt->render_file_to_file($menu, catdir($output_dir, "menu.html"), @files);
 
 }
 
+sub plugin {
+    my $self = shift;
+    my $module = shift;
+
+    my $fullname = 'Hyde::Plugin::' . Mojo::ByteStream->new($module)->camelize;
+    warn $fullname;
+    my $e = Mojo::Loader->new->load($fullname);
+    warn $e->message if ref $e;
+    $fullname->new->register($self);
+}
+
+sub add_handler {
+    my $self = shift;
+    my ($name, $cb) = @_;
+    $self->plugins({%{$self->plugins}, $name => $cb});
+}
 
 1;
 __END__
