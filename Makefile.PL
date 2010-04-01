@@ -3,9 +3,9 @@ use Module::Install::ReadmeFromPod;
 use Module::Install::AuthorTests;
 use Module::Install::Repository
 
-name 'Hyde';
-all_from 'lib/Hyde.pm';
-readme_from('lib/Hyde.pm');
+name 'Utterson';
+all_from 'lib/Utterson.pm';
+readme_from('lib/Utterson.pm');
 
 requires 'Mojolicious';
 requires 'Plack';

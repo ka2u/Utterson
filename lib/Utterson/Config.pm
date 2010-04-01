@@ -1,4 +1,4 @@
-package Hyde::Config;
+package Utterson::Config;
 
 use strict;
 use warnings;

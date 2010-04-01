@@ -1,11 +1,11 @@
-package Hyde;
+package Utterson;
 
 use strict;
 use warnings;
 our $VERSION = '0.01';
 
 use base 'Mojo::Base';
-use Hyde::Config;
+use Utterson::Config;
 use Mojo::Loader;
 use Mojo::ByteStream;
 use File::Spec::Functions;
@@ -25,7 +25,7 @@ sub generate {
     my $self = shift;
     my $conf_path = shift;
 
-    my $conf = Hyde::Config->new;
+    my $conf = Utterson::Config->new;
     $conf->load($conf_path);
 
     my $layouts_dir = catdir($FindBin::Bin, 'layouts');
@@ -71,7 +71,7 @@ sub plugin {
     my $self = shift;
     my $module = shift;
 
-    my $fullname = 'Hyde::Plugin::' . Mojo::ByteStream->new($module)->camelize;
+    my $fullname = 'Utterson::Plugin::' . Mojo::ByteStream->new($module)->camelize;
     warn $fullname;
     my $e = Mojo::Loader->new->load($fullname);
     warn $e->message if ref $e;
@@ -93,15 +93,15 @@ __END__
 
 =head1 NAME
 
-Hyde -
+Utterson -
 
 =head1 SYNOPSIS
 
-  use Hyde;
+  use Utterson;
 
 =head1 DESCRIPTION
 
-Hyde is
+Utterson is
 
 =head1 AUTHOR
 

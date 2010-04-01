@@ -1,18 +1,19 @@
 # NAME
 
-Hyde
+Utterson
 
 # SYNOPSIS
 
 generate
-    scripts/hyde -g
+    scripts/utterson -g
 
 server
-    scripts/hyde --server
+    scripts/utterson --server
 
 # DESCRIPTION    
 
 Dr. Jekyll and Mr. Hyde
+Utterson is Jekyll's "dry" lawyer and friend.
 
-Hyde is static site generator like jekyll.
+Utterson is static site generator like jekyll(http://wiki.github.com/mojombo/jekyll/).
 

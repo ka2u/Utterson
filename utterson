@@ -5,7 +5,7 @@ use warnings;
 use FindBin;
 use lib "$FindBin::Bin/extlib/lib/perl5";
 use lib "$FindBin::Bin/lib";
-use Hyde;
+use Utterson;
 use Getopt::Long;
 use Plack::Builder;
 use FindBin;
@@ -21,7 +21,7 @@ Getopt::Long::GetOptions(
 );
 
 if ($generate) {
-    my $core = Hyde->new;
+    my $core = Utterson->new;
     $core->generate($config || 'config.yaml');
 }
 elsif ($plackup) {

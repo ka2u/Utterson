@@ -1,4 +1,4 @@
-package Hyde::Plugin::Hatena;
+package Utterson::Plugin::Hatena;
 
 use strict;
 use warnings;
