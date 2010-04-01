@@ -5,9 +5,11 @@ use warnings;
 our $VERSION = '0.01';
 
 use base 'Mojo::Base';
+use Hyde::Config;
 use Mojo::Loader;
 use Mojo::ByteStream;
 use File::Spec::Functions;
+use File::Path; 
 use Mojo::Template;
 use Encode;
 
@@ -21,28 +23,35 @@ sub new {
 
 sub generate {
     my $self = shift;
-    my $layouts_dir = catdir($FindBin::Bin, '..', 'layouts');
+    my $conf_path = shift;
+
+    my $conf = Hyde::Config->new;
+    $conf->load($conf_path);
+
+    my $layouts_dir = catdir($FindBin::Bin, 'layouts');
     my $layouts = catdir($layouts_dir, 'default');
 
-    my $source_dir = catdir($FindBin::Bin, '..', 'posts');
+    my $source_dir = catdir($FindBin::Bin, $conf->{source});
     opendir(my $dh, $source_dir) || die "can't open dir";
     my @sources = grep { /^\./ !~ $_ && -f catdir($source_dir, $_) } readdir($dh);
 
-    my $output_dir = catdir($FindBin::Bin, '..', 'site');
+    my $output_dir = catdir($FindBin::Bin, $conf->{destination});
 
 
     my @files;
     foreach my $source (@sources) {
         print "[source]$source\n";
         my ($file, $date, $ft) = split /\./, $source;
-        push @files, $file;
-        warn "$file, $date, $ft";
+        my @dates = split '-', $date;
+        mkpath catdir($output_dir, @dates);
+        push @files, catdir(@dates, $file);
+
         open my $fh, '<', catdir($source_dir, $source);
         my $string = join "", <$fh>;
-        print "[output]".catdir($output_dir, "${file}.html")."\n";
+        print "[output]".catdir($output_dir, @dates, "${file}.html")."\n";
         my $args = {
             layouts => $layouts,
-            output => catdir($output_dir, "${file}.html"),
+            output => catdir($output_dir, @dates, "${file}.html"),
             string => $string,
         };
         unless (exists $self->plugins->{$ft}) {

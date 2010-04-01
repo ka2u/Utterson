@@ -10,6 +10,8 @@ readme_from('lib/Hyde.pm');
 requires 'Mojolicious';
 requires 'Plack';
 requires 'Text::Xatena';
+requires 'YAML::Tiny';
+requires 'File::Path';
 build_requires 'Test::More';
 test_requires 'Test::Requires';
 

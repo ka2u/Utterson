@@ -12,16 +12,17 @@ use FindBin;
 use File::Spec::Functions;
 
 
-my ($generate, $source, $plackup, $layouts);
+my ($generate, $source, $plackup, $config);
 Getopt::Long::Configure( "no_ignore_case", "pass_through" );
 Getopt::Long::GetOptions(
     'g|generate'  => \$generate,
     's|server'    => \$plackup,
+    'c|config'    => \$config,
 );
 
 if ($generate) {
     my $core = Hyde->new;
-    $core->generate();
+    $core->generate($config || 'config.yaml');
 }
 elsif ($plackup) {
     plackup();
