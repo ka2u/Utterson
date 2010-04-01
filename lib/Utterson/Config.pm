@@ -23,7 +23,7 @@ sub load {
     Carp::croak("source directory not found.")
         unless -d $self->source; 
 
-    
+    #TODO
     #$self->permalink($conf->{parmalink});
 }
 
