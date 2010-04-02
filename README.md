@@ -5,10 +5,10 @@ Utterson
 # SYNOPSIS
 
 generate
-    scripts/utterson -g
+    ./utterson -g
 
 server
-    scripts/utterson --server
+    ./utterson --server
 
 # DESCRIPTION    
 
