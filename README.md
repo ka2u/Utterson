@@ -23,7 +23,6 @@ Utterson is static site generator like jekyll(http://wiki.github.com/mojombo/jek
 * Add rss
 * top menu slick up
 * highlight code
-* update if file modify
 * Add plugin markdown
 * Add plugin textile
 * Add plugin html
