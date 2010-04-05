@@ -12,6 +12,7 @@ requires 'Plack';
 requires 'Text::Xatena';
 requires 'YAML::Tiny';
 requires 'File::Path';
+requires 'Digest::SHA1';
 build_requires 'Test::More';
 test_requires 'Test::Requires';
 
