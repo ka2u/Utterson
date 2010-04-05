@@ -6,6 +6,7 @@ our $VERSION = '0.01';
 
 use base 'Mojo::Base';
 use Utterson::Config;
+use Utterson::Modification;
 use Mojo::Loader;
 use Mojo::ByteStream;
 use File::Spec::Functions;
@@ -37,7 +38,7 @@ sub generate {
 
     my $output_dir = catdir($FindBin::Bin, $conf->{destination});
 
-
+    my $modif = Utterson::Modification->new;
     my @files;
     foreach my $source (@sources) {
         print "[source]$source\n";
@@ -48,6 +49,12 @@ sub generate {
 
         open my $fh, '<', catdir($source_dir, $source);
         my $string = join "", <$fh>;
+        unless ($modif->is_modification(
+            $source, -s catdir($source_dir, $source), $string)){
+            print "[pass]$source\n";
+            next;
+        }
+
         print "[output]".catdir($output_dir, @dates, "${file}.html")."\n";
         my $args = {
             layouts => $layouts,
@@ -65,6 +72,7 @@ sub generate {
     my $menu = catdir($layouts_dir, 'menu');
     $mt->render_file_to_file($menu, catdir($output_dir, "menu.html"), @files);
 
+    $modif->dump_hash;
 }
 
 sub plugin {
@@ -72,7 +80,6 @@ sub plugin {
     my $module = shift;
 
     my $fullname = 'Utterson::Plugin::' . Mojo::ByteStream->new($module)->camelize;
-    warn $fullname;
     my $e = Mojo::Loader->new->load($fullname);
     warn $e->message if ref $e;
     $fullname->new->register($self);
