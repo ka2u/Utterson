@@ -35,11 +35,16 @@ sub generate {
     my $source_dir = catdir($FindBin::Bin, $conf->{source});
     opendir(my $dh, $source_dir) || die "can't open dir";
     my @sources = grep { /^\./ !~ $_ && -f catdir($source_dir, $_) } readdir($dh);
+    @sources = sort {
+        my ($afile, $adate, $aft) = split /\./, $a;
+        my ($bfile, $bdate, $bft) = split /\./, $b;
+        $adate cmp $bdate;
+    } @sources;
 
     my $output_dir = catdir($FindBin::Bin, $conf->{destination});
-
     my $modif = Utterson::Modification->new;
     my @files;
+    my $content;
     foreach my $source (@sources) {
         print "[source]$source\n";
         my ($file, $date, $ft) = split /\./, $source;
@@ -65,14 +70,16 @@ sub generate {
             print "$ft doesn't exist.";
             next;
         }
-        $self->plugins->{$ft}->($self, $args);
+        $content = $self->plugins->{$ft}->($self, $args);
     }
 
-    my $mt = Mojo::Template->new;
-    my $menu = catdir($layouts_dir, 'menu');
-    $mt->render_file_to_file($menu, catdir($output_dir, "menu.html"), @files);
+    if ($content) {
+        my $mt = Mojo::Template->new;
+        my $menu = catdir($layouts_dir, 'index');
+        $mt->render_file_to_file($menu, catdir($output_dir, "index.html"), $content, @files);
 
-    $modif->dump_hash;
+        $modif->dump_hash;
+    }
 }
 
 sub plugin {

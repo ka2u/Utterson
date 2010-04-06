@@ -37,7 +37,7 @@
       <div id="main" class="container">
         <div class="span-15">
         <%= $content %>
-        <a href="/menu.html">menu</a>
+        <a href="/index.html">index</a>
         </div>
       </div>
     </div>

@@ -1,3 +1,4 @@
+% my $content = shift;
 % my @links = @_;
 <!DOCTYPE HTML>
 <html lang="en">
@@ -9,31 +10,51 @@
     <link rel="stylesheet" href="/css/style.css" type="text/css" media="screen, projection">
     <style>
       h1 { margin: 20px; }
+      h3 { font-size: 30px;
+           padding-left: 10px;
+           border-width: 0px 0px 2px 20px;
+           border-style: solid;
+           border-color: #9F9F9F;
+           line-height: 100%;
+      }
+      h4 { font-size: 20px;
+           padding-left: 10px;
+           border-width: 0px 0px 2px 15px;
+           border-style: solid;
+           border-color: #9F9F9F;
+           line-height: 100%;
+      }
+      h5 { font-size: 10px }
       p.tagline { color: #888; padding-bottom: 2em }
       p.quote  { padding-bottom: 0 }
       p.quoted { text-align: right; padding: 0; font-style: italic; padding-bottom: 1em }
       pre.code { color:#fff; background-color:#111; width: 600px }
-      ul { font-size: 20px }
+      ul { font-size: 10px }
       #footer { text-align: center }
-      #main { margin-left: 15px }
+      #main { padding: 10px }
     </style>
 </head>
   <body>
     <div id="wrap">
-      <div id="header" class="span-24 last">
-        <h1>Utterson</h1>
-        <hr />
-      </div>
-      <div id="main" class="container clearfix">
-        <div class="span-15">
+      <div class="container">
+
+        <div id="header" class="span-24 last">
+          <h1>Utterson</h1>
+          <hr />
+        </div>
+
+        <div id="main" class="span-17"><%= $content %></div>
+
+        <div id="right" class="span-6 last">
           <ul>
-% for (sort @links) {
+% for (reverse @links) {
           <li>
           <a href="<%= "$_.html" %>"><%= $_ %></a><br />
           </li>
 % }
           </ul>
         </div>
+
       </div>
     </div>
 
