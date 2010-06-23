@@ -13,12 +13,14 @@ use File::Spec::Functions;
 use File::Path; 
 use Mojo::Template;
 use Encode;
+use Data::Dumper;
 
 __PACKAGE__->attr(plugins => sub{{}});
 
 sub new {
     my $self = shift->SUPER::new(@_);
     $self->plugin('hatena');
+    $self->plugin('pod');
     return $self;
 }
 
